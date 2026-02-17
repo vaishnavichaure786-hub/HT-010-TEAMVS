@@ -110,7 +110,7 @@ margin-top:40px;
 
 <body>
 
-<!-- NAV -->
+
 <nav>
 <div>♻ Smart Waste City</div>
 <div>
@@ -122,7 +122,7 @@ margin-top:40px;
 </div>
 </nav>
 
-<!-- FORM -->
+
 <div class="container">
 <h2>Report Waste</h2>
 
@@ -169,7 +169,7 @@ margin-top:40px;
 
 </div>
 
-<!-- TABLE (Name & Mobile Hidden) -->
+
 <table>
 <thead>
 <tr>
@@ -197,19 +197,19 @@ JSON.parse(localStorage.getItem("wasteReports")) || [];
 const tbody =
 document.getElementById("tbody");
 
-/* ===== GENERATE BIN ID ===== */
+
 function makeBinID(){
 return "BINID-" + Math.floor(Math.random()*1000000);
 }
 
-/* ===== SUBMIT ===== */
+
 document.getElementById("wasteForm").onsubmit = function(e){
 e.preventDefault();
 
 const r = {
 ID: makeBinID(),
-Name: nameInput.value,     // saved but hidden
-Mobile: mobileInput.value, // saved but hidden
+Name: nameInput.value,     
+Mobile: mobileInput.value, 
 Zone: zoneInput.value,
 Type: typeInput.value,
 Urgency: urgencyInput.value,
@@ -224,7 +224,7 @@ this.reset();
 alert("Report Submitted");
 };
 
-/* ===== SAVE ===== */
+
 function save(){
 localStorage.setItem(
 "wasteReports",
@@ -233,7 +233,7 @@ JSON.stringify(reports)
 render();
 }
 
-/* ===== RENDER (NO NAME/MOBILE) ===== */
+
 function render(){
 tbody.innerHTML = "";
 
@@ -253,7 +253,7 @@ tbody.innerHTML += `
 
 render();
 
-/* ===== IMPORT EXCEL ===== */
+
 function importExcel(){
 const file = excelFile.files[0];
 if(!file){ alert("Choose file"); return; }
@@ -274,7 +274,7 @@ alert("Excel Imported");
 reader.readAsArrayBuffer(file);
 }
 
-/* ===== EXPORT EXCEL ===== */
+
 function exportExcel(){
 const ws = XLSX.utils.json_to_sheet(reports);
 const wb = XLSX.utils.book_new();

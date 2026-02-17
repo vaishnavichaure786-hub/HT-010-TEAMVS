@@ -18,7 +18,7 @@ body{
   background:#f4f9f7;
 }
 
-/* NAV */
+
 nav{
   background:#0f6d46;
   color:white;
@@ -36,7 +36,7 @@ nav{
   font-weight:bold;
 }
 
-/* HEADER */
+
 .header{
   text-align:center;
   padding:25px;
@@ -46,7 +46,7 @@ nav{
   color:#158f5a;
 }
 
-/* SEARCH */
+
 .searchBox{
   text-align:center;
   margin-bottom:15px;
@@ -59,7 +59,7 @@ nav{
   border:1px solid #ccc;
 }
 
-/* TABLE */
+
 table{
   width:96%;
   margin:20px auto;
@@ -97,7 +97,7 @@ button{
   margin:15px;
 }
 
-/* FOOTER */
+
 footer{
   background:#0f6d46;
   color:white;
@@ -110,7 +110,7 @@ footer{
 
 <body>
 
-<!-- NAV -->
+
 <nav>
   <div class="logo">♻ Smart Waste City</div>
   <div class="menu">
@@ -161,7 +161,7 @@ Smart City  — Admin Module
 let reports = JSON.parse(localStorage.getItem("wasteReports")) || [];
 const tbody = document.querySelector("#reportTable tbody");
 
-/* ===== RENDER TABLE ===== */
+
 function render(data){
   tbody.innerHTML="";
 
@@ -192,13 +192,13 @@ function render(data){
 
 render(reports);
 
-/* ===== STATUS UPDATE ===== */
+
 function markClean(i){
   reports[i].Status = "Cleaned";
   save();
 }
 
-/* ===== DELETE ===== */
+
 function delRow(i){
   if(confirm("Delete this report?")){
     reports.splice(i,1);
@@ -206,14 +206,14 @@ function delRow(i){
   }
 }
 
-/* ===== SAVE ===== */
+
 function save(){
   localStorage.setItem("wasteReports",
     JSON.stringify(reports));
   render(reports);
 }
 
-/* ===== SEARCH ===== */
+
 search.addEventListener("input", e=>{
   const q = e.target.value.toLowerCase();
   const filtered = reports.filter(r =>
@@ -223,7 +223,7 @@ search.addEventListener("input", e=>{
   render(filtered);
 });
 
-/* ===== EXPORT EXCEL ===== */
+
 function exportExcel(){
   const ws = XLSX.utils.json_to_sheet(reports);
   const wb = XLSX.utils.book_new();
