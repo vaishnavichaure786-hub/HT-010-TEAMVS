@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Admin Panel</title>
-
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <style>
@@ -14,11 +13,9 @@
   font-family: Arial, sans-serif;
 }
 
-body{
-  background:#f4f9f7;
-}
+body{background:#f4f9f7;}
 
-
+/* NAV */
 nav{
   background:#0f6d46;
   color:white;
@@ -36,17 +33,36 @@ nav{
   font-weight:bold;
 }
 
-
+/* HEADER */
 .header{
   text-align:center;
   padding:25px;
 }
 
-.header h1{
-  color:#158f5a;
+.header h1{color:#158f5a;}
+
+/* BUTTONS TO SWITCH SECTIONS */
+.sectionBtns{
+  text-align:center;
+  margin-bottom:20px;
 }
 
+.sectionBtns button{
+  padding:10px 18px;
+  margin:5px;
+  border:none;
+  border-radius:6px;
+  background:#158f5a;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
 
+.sectionBtns button.active{
+  background:#0f6d46;
+}
+
+/* SEARCH */
 .searchBox{
   text-align:center;
   margin-bottom:15px;
@@ -59,7 +75,7 @@ nav{
   border:1px solid #ccc;
 }
 
-
+/* TABLE */
 table{
   width:96%;
   margin:20px auto;
@@ -75,29 +91,27 @@ th,td{
   font-size:14px;
 }
 
-th{
-  background:#158f5a;
-  color:white;
-}
+th{background:#158f5a;color:white;}
 
-button{
-  padding:6px 10px;
-  border:none;
+img{
+  width:80px;
+  height:80px;
+  object-fit:cover;
   border-radius:6px;
-  cursor:pointer;
-  font-weight:bold;
 }
 
-.cleanBtn{ background:#1fd18a; }
+select{
+  padding:5px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+/* BUTTONS */
+button.tableBtn{padding:6px 10px; border-radius:6px; cursor:pointer; font-weight:bold;}
 .delBtn{ background:#e74c3c; color:white; }
-.exportBtn{
-  background:#158f5a;
-  color:white;
-  padding:10px 18px;
-  margin:15px;
-}
+.exportBtn{background:#158f5a; color:white; padding:10px 18px; margin:15px;}
 
-
+/* FOOTER */
 footer{
   background:#0f6d46;
   color:white;
@@ -110,64 +124,111 @@ footer{
 
 <body>
 
-
+<!-- NAV -->
 <nav>
   <div class="logo">♻ Smart Waste City</div>
   <div class="menu">
     <a href="home.html">Home</a>
     <a href="report.html">Report Waste</a>
     <a href="binstatus.html">Bin Status</a>
-    <a href="recycle.html">Recycle and Use</a>
+    <a href="recycle.html">Recycle Bin</a>
     <a href="login.html">Admin</a>
   </div>
 </nav>
 
 <div class="header">
   <h1>Admin Control Panel</h1>
-  <p>Manage complaints and update status</p>
+  <p>Switch between Report Waste & Bin Status</p>
 </div>
 
+<div class="sectionBtns">
+  <button id="reportBtn" class="active" onclick="showSection('report')">Report Waste</button>
+  <button id="binBtn" onclick="showSection('bin')">Bin Status</button>
+</div>
+
+<!-- SEARCH -->
 <div class="searchBox">
-  <input type="text" id="search" placeholder="Search by name / zone / type">
+  <input type="text" id="search" placeholder="Search reports / bins">
 </div>
 
-<div style="text-align:center;">
-  <button class="exportBtn" onclick="exportExcel()">Export Excel</button>
+<!-- REPORT WASTE TABLE -->
+<div id="reportSection">
+  <div style="text-align:center;">
+    <button class="exportBtn" onclick="exportExcel()">Export Excel</button>
+  </div>
+  <table id="reportTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Mobile</th>
+        <th>Zone</th>
+        <th>Type</th>
+        <th>Urgency</th>
+        <th>Location</th>
+        <th>Status</th>
+        <th>Citizen Photo</th>
+        <th>Time</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 </div>
 
-<table id="reportTable">
-<thead>
-<tr>
-<th>ID</th>
-<th>Name</th>
-<th>Mobile</th>
-<th>Zone</th>
-<th>Type</th>
-<th>Urgency</th>
-<th>Location</th>
-<th>Status</th>
-<th>Time</th>
-<th>Actions</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
+<!-- BIN STATUS TABLE -->
+<div id="binSection" style="display:none;">
+  <div style="text-align:center;">
+    <button class="exportBtn" onclick="exportBinExcel()">Export Bin Excel</button>
+  </div>
+  <table id="binTable">
+    <thead>
+      <tr>
+        <th>Bin ID</th>
+        <th>Area</th>
+        <th>Type</th>
+        <th>Citizen Photo</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
 
 <footer>
-Smart City  — Admin Module
+Smart City — Admin Module
 </footer>
 
 <script>
+/* ===== ADMIN DATA ===== */
 let reports = JSON.parse(localStorage.getItem("wasteReports")) || [];
-const tbody = document.querySelector("#reportTable tbody");
+let bins = JSON.parse(localStorage.getItem("cityBins")) || [];
+
+const reportTbody = document.querySelector("#reportTable tbody");
+const binTbody = document.querySelector("#binTable tbody");
+
+function showSection(section){
+  if(section==='report'){
+    document.getElementById('reportSection').style.display='block';
+    document.getElementById('binSection').style.display='none';
+    document.getElementById('reportBtn').classList.add('active');
+    document.getElementById('binBtn').classList.remove('active');
+  }else{
+    document.getElementById('reportSection').style.display='none';
+    document.getElementById('binSection').style.display='block';
+    document.getElementById('reportBtn').classList.remove('active');
+    document.getElementById('binBtn').classList.add('active');
+  }
+}
 
 
-function render(data){
-  tbody.innerHTML="";
-
+function renderReports(data){
+  reportTbody.innerHTML="";
   data.forEach((r,i)=>{
-    const row = tbody.insertRow();
-
+    const bin = bins.find(b=>b.area===r.Zone && b.type===r.Type);
+    const imgTag = bin && bin.image ? `<img src="${bin.image}">` : "No Image";
+    const row = reportTbody.insertRow();
     row.innerHTML = `
       <td>${r.ID}</td>
       <td>${r.Name}</td>
@@ -176,60 +237,96 @@ function render(data){
       <td>${r.Type}</td>
       <td>${r.Urgency}</td>
       <td>${r.Location}</td>
-      <td>${r.Status}</td>
+      <td>
+        <select onchange="updateReportStatus(this,${i})">
+          <option value="Empty" ${r.Status==="Empty"?"selected":""}>Empty</option>
+          <option value="Medium" ${r.Status==="Medium"?"selected":""}>Medium</option>
+          <option value="Full" ${r.Status==="Full"?"selected":""}>Full</option>
+        </select>
+      </td>
+      <td>${imgTag}</td>
       <td>${r.Time}</td>
       <td>
-        <button class="cleanBtn" onclick="markClean(${i})">
-          Cleaned
-        </button>
-        <button class="delBtn" onclick="delRow(${i})">
-          Delete
-        </button>
+        <button class="delBtn" onclick="deleteReport(${i})">Delete</button>
       </td>
     `;
   });
 }
 
-render(reports);
-
-
-function markClean(i){
-  reports[i].Status = "Cleaned";
-  save();
+/* ===== RENDER BIN TABLE ===== */
+function renderBins(){
+  binTbody.innerHTML="";
+  bins.forEach((b,i)=>{
+    const imgTag = b.image ? `<img src="${b.image}">` : "No Image";
+    const row = binTbody.insertRow();
+    row.innerHTML = `
+      <td>${b.id}</td>
+      <td>${b.area}</td>
+      <td>${b.type}</td>
+      <td>${imgTag}</td>
+      <td>
+        <select onchange="updateBinStatus(this,${i})">
+          <option value="Empty" ${b.status==="Empty"?"selected":""}>Empty</option>
+          <option value="Medium" ${b.status==="Medium"?"selected":""}>Medium</option>
+          <option value="Full" ${b.status==="Full"?"selected":""}>Full</option>
+        </select>
+      </td>
+      <td>
+        <button class="delBtn" onclick="deleteBin(${i})">Delete</button>
+      </td>
+    `;
+  });
 }
 
-
-function delRow(i){
-  if(confirm("Delete this report?")){
-    reports.splice(i,1);
-    save();
-  }
+/* ===== UPDATE STATUS ===== */
+function updateReportStatus(selectObj,index){
+  reports[index].Status = selectObj.value;
+  saveReports();
 }
 
-
-function save(){
-  localStorage.setItem("wasteReports",
-    JSON.stringify(reports));
-  render(reports);
+function updateBinStatus(selectObj,index){
+  bins[index].status = selectObj.value;
+  bins[index].image = ""; // remove citizen uploaded image after admin update
+  saveBins();
 }
 
+/* ===== DELETE ===== */
+function deleteReport(i){if(confirm("Delete this report?")){reports.splice(i,1); saveReports();}}
+function deleteBin(i){if(confirm("Delete this bin entry?")){bins.splice(i,1); saveBins();}}
 
-search.addEventListener("input", e=>{
+/* ===== SAVE ===== */
+function saveReports(){localStorage.setItem("wasteReports",JSON.stringify(reports)); renderReports(reports);}
+function saveBins(){localStorage.setItem("cityBins",JSON.stringify(bins)); renderBins();}
+
+/* ===== SEARCH ===== */
+document.getElementById("search").addEventListener("input",e=>{
   const q = e.target.value.toLowerCase();
-  const filtered = reports.filter(r =>
-    Object.values(r).join(" ")
-    .toLowerCase().includes(q)
-  );
-  render(filtered);
+  if(document.getElementById('reportSection').style.display!=='none'){
+    const filtered = reports.filter(r => Object.values(r).join(" ").toLowerCase().includes(q));
+    renderReports(filtered);
+  }else{
+    const filtered = bins.filter(b => Object.values(b).join(" ").toLowerCase().includes(q));
+    renderBins(filtered);
+  }
 });
 
-
+/* ===== EXPORT EXCEL ===== */
 function exportExcel(){
   const ws = XLSX.utils.json_to_sheet(reports);
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Reports");
-  XLSX.writeFile(wb, "waste_reports.xlsx");
+  XLSX.utils.book_append_sheet(wb,ws,"Reports");
+  XLSX.writeFile(wb,"waste_reports.xlsx");
 }
+function exportBinExcel(){
+  const ws = XLSX.utils.json_to_sheet(bins);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"Bins");
+  XLSX.writeFile(wb,"bins_status.xlsx");
+}
+
+/* ===== INITIAL RENDER ===== */
+renderReports(reports);
+renderBins();
 </script>
 
 </body>
