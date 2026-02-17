@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Panel</title>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  background:#f4f9f7;
+}
+
+/* NAV */
+nav{
+  background:#0f6d46;
+  color:white;
+  display:flex;
+  justify-content:space-between;
+  padding:16px 40px;
+}
+
+.logo{font-weight:bold;font-size:20px;}
+
+.menu a{
+  color:white;
+  text-decoration:none;
+  margin-left:22px;
+  font-weight:bold;
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:25px;
+}
+
+.header h1{
+  color:#158f5a;
+}
+
+/* SEARCH */
+.searchBox{
+  text-align:center;
+  margin-bottom:15px;
+}
+
+.searchBox input{
+  padding:10px;
+  width:280px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+/* TABLE */
+table{
+  width:96%;
+  margin:20px auto;
+  border-collapse:collapse;
+  background:white;
+  box-shadow:0 6px 16px rgba(0,0,0,.1);
+}
+
+th,td{
+  border:1px solid #ddd;
+  padding:10px;
+  text-align:center;
+  font-size:14px;
+}
+
+th{
+  background:#158f5a;
+  color:white;
+}
+
+button{
+  padding:6px 10px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.cleanBtn{ background:#1fd18a; }
+.delBtn{ background:#e74c3c; color:white; }
+.exportBtn{
+  background:#158f5a;
+  color:white;
+  padding:10px 18px;
+  margin:15px;
+}
+
+/* FOOTER */
+footer{
+  background:#0f6d46;
+  color:white;
+  text-align:center;
+  padding:18px;
+  margin-top:30px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">♻ Smart Waste City</div>
+  <div class="menu">
+    <a href="home.html">Home</a>
+    <a href="report.html">Report Waste</a>
+    <a href="binstatus.html">Bin Status</a>
+    <a href="recycle.html">Recycle Bin</a>
+    <a href="login.html">Admin</a>
+  </div>
+</nav>
+
+<div class="header">
+  <h1>Admin Control Panel</h1>
+  <p>Manage complaints and update status</p>
+</div>
+
+<div class="searchBox">
+  <input type="text" id="search" placeholder="Search by name / zone / type">
+</div>
+
+<div style="text-align:center;">
+  <button class="exportBtn" onclick="exportExcel()">Export Excel</button>
+</div>
+
+<table id="reportTable">
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Mobile</th>
+<th>Zone</th>
+<th>Type</th>
+<th>Urgency</th>
+<th>Location</th>
+<th>Status</th>
+<th>Time</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<footer>
+Smart City  — Admin Module
+</footer>
+
+<script>
+let reports = JSON.parse(localStorage.getItem("wasteReports")) || [];
+const tbody = document.querySelector("#reportTable tbody");
+
+/* ===== RENDER TABLE ===== */
+function render(data){
+  tbody.innerHTML="";
+
+  data.forEach((r,i)=>{
+    const row = tbody.insertRow();
+
+    row.innerHTML = `
+      <td>${r.ID}</td>
+      <td>${r.Name}</td>
+      <td>${r.Mobile}</td>
+      <td>${r.Zone}</td>
+      <td>${r.Type}</td>
+      <td>${r.Urgency}</td>
+      <td>${r.Location}</td>
+      <td>${r.Status}</td>
+      <td>${r.Time}</td>
+      <td>
+        <button class="cleanBtn" onclick="markClean(${i})">
+          Cleaned
+        </button>
+        <button class="delBtn" onclick="delRow(${i})">
+          Delete
+        </button>
+      </td>
+    `;
+  });
+}
+
+render(reports);
+
+/* ===== STATUS UPDATE ===== */
+function markClean(i){
+  reports[i].Status = "Cleaned";
+  save();
+}
+
+/* ===== DELETE ===== */
+function delRow(i){
+  if(confirm("Delete this report?")){
+    reports.splice(i,1);
+    save();
+  }
+}
+
+/* ===== SAVE ===== */
+function save(){
+  localStorage.setItem("wasteReports",
+    JSON.stringify(reports));
+  render(reports);
+}
+
+/* ===== SEARCH ===== */
+search.addEventListener("input", e=>{
+  const q = e.target.value.toLowerCase();
+  const filtered = reports.filter(r =>
+    Object.values(r).join(" ")
+    .toLowerCase().includes(q)
+  );
+  render(filtered);
+});
+
+/* ===== EXPORT EXCEL ===== */
+function exportExcel(){
+  const ws = XLSX.utils.json_to_sheet(reports);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Reports");
+  XLSX.writeFile(wb, "waste_reports.xlsx");
+}
+</script>
+
+</body>
+</html>
