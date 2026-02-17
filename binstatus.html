@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bin Status</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#f2faf6;
+}
+
+/* ===== NAVBAR ===== */
+nav{
+background:#0f6d46;
+color:white;
+display:flex;
+justify-content:space-between;
+padding:16px 40px;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:18px;
+font-weight:bold;
+}
+
+/* ===== PAGE ===== */
+.container{
+padding:30px;
+}
+
+h2{
+text-align:center;
+color:#0f6d46;
+margin-bottom:20px;
+}
+
+/* ===== GRID ===== */
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+border-radius:14px;
+padding:20px;
+box-shadow:0 8px 18px rgba(0,0,0,.12);
+}
+
+.binid{
+font-weight:bold;
+font-size:18px;
+color:#158f5a;
+}
+
+.zone{
+color:#555;
+margin:4px 0 8px;
+}
+
+/* TYPE BADGE */
+.type{
+display:inline-block;
+padding:4px 10px;
+border-radius:20px;
+font-size:13px;
+color:white;
+margin-bottom:10px;
+}
+
+.dry{background:#f39c12;}
+.wet{background:#27ae60;}
+.plastic{background:#2980b9;}
+.mixed{background:#7f8c8d;}
+
+/* BAR */
+.bar{
+height:18px;
+background:#eee;
+border-radius:10px;
+overflow:hidden;
+margin:10px 0;
+}
+
+.fill{
+height:100%;
+width:0%;
+transition:.4s;
+}
+
+.status{
+font-weight:bold;
+margin-bottom:8px;
+font-size:16px;
+}
+
+.empty{color:green;}
+.medium{color:orange;}
+.full{color:red;}
+
+button{
+padding:8px 12px;
+border:none;
+border-radius:8px;
+background:#158f5a;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+<div>♻ Smart Waste City</div>
+<div>
+<a href="home.html">Home</a>
+<a href="report.html">Report</a>
+<a href="recycle.html">Recycle Bin</a>
+<a href="binstatus.html">Bin Status</a>
+<a href="admin-login.html">Admin</a>
+</div>
+</nav>
+
+<div class="container">
+<h2>Bin Status Monitor</h2>
+
+<div class="grid" id="grid"></div>
+</div>
+
+<script>
+
+/* ===== AREAS ===== */
+const areas = [
+"MIDC Area",
+"TC College Area",
+"VP College Area",
+"Railway Station",
+"Bus Station",
+"Kasba Area",
+"Silver Jubilee Hospital"
+];
+
+const types = ["Dry","Wet","Plastic","Mixed"];
+
+/* ===== CREATE 4 BINS PER AREA ===== */
+let bins = [];
+let id = 200;
+
+areas.forEach(a=>{
+types.forEach(t=>{
+bins.push({
+id:"BINID-"+(++id),
+zone:a,
+type:t,
+level:Math.floor(Math.random()*100)
+});
+});
+});
+
+/* ===== LABEL ONLY ===== */
+function getStatus(level){
+if(level < 40) return ["Empty","empty","green"];
+if(level < 80) return ["Medium","medium","orange"];
+return ["Full","full","red"];
+}
+
+function typeClass(t){
+return t.toLowerCase();
+}
+
+/* ===== RENDER ===== */
+function render(){
+
+const grid = document.getElementById("grid");
+grid.innerHTML="";
+
+bins.forEach((b,i)=>{
+
+const [text,cls,color] = getStatus(b.level);
+
+grid.innerHTML += `
+<div class="card">
+<div class="binid">${b.id}</div>
+<div class="zone">${b.zone}</div>
+
+<div class="type ${typeClass(b.type)}">
+${b.type} Waste
+</div>
+
+<div class="bar">
+<div class="fill" id="bar${i}"></div>
+</div>
+
+<div class="status ${cls}">
+Status: ${text}
+</div>
+
+<button onclick="updateLevel(${i})">
+Update Status
+</button>
+</div>
+`;
+});
+
+/* apply bar fill */
+bins.forEach((b,i)=>{
+const el = document.getElementById("bar"+i);
+const [, , color] = getStatus(b.level);
+el.style.width = b.level + "%";
+el.style.background = color;
+});
+
+}
+
+/* ===== SIMULATE UPDATE ===== */
+function updateLevel(i){
+bins[i].level = Math.floor(Math.random()*100);
+render();
+}
+
+render();
+
+</script>
+
+</body>
+</html>
