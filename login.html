@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Login</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial;
+}
+
+body{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#0f6d46,#1faa72);
+}
+
+.login-box{
+  background:#fff;
+  width:340px;
+  padding:30px;
+  border-radius:14px;
+  box-shadow:0 10px 25px rgba(0,0,0,.2);
+}
+
+h2{
+  text-align:center;
+  color:#158f5a;
+  margin-bottom:20px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  background:#158f5a;
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#0f6d46;
+}
+
+.msg{
+  text-align:center;
+  color:red;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="login-box">
+  <h2>Admin Login</h2>
+
+  <form onsubmit="return loginCheck()">
+    <input id="user" placeholder="Username" required>
+    <input id="pass" type="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+
+  <div id="msg" class="msg"></div>
+</div>
+
+<script>
+
+/* ===== TWO LOGIN USERS ===== */
+const users = [
+  {u:"sakshi", p:"1234"},
+  {u:"vaishnavi", p:"1234"}
+];
+
+function loginCheck(){
+
+const u = user.value.trim();
+const p = pass.value.trim();
+
+/* check any matching user */
+const ok = users.some(x => x.u === u && x.p === p);
+
+if(ok){
+  localStorage.setItem("adminLoggedIn","yes");
+  window.location.href = "admin.html";
+  return false;
+}
+
+msg.innerText = "Invalid username or password";
+return false;
+}
+
+</script>
+
+</body>
+</html>
