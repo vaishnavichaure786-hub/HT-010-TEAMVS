@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart City Waste Management</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  background:#f3faf7;
+}
+
+
+nav{
+  background:#0f6d46;
+  color:white;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 40px;
+}
+
+.logo{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.menu a{
+  color:white;
+  text-decoration:none;
+  margin-left:22px;
+  font-weight:bold;
+  position:relative;
+}
+
+.menu a::after{
+  content:"";
+  width:0%;
+  height:2px;
+  background:#1fd18a;
+  position:absolute;
+  left:0;
+  bottom:-6px;
+  transition:.3s;
+}
+
+.menu a:hover::after{
+  width:100%;
+}
+
+
+.hero{
+  text-align:center;
+  padding:70px 20px;
+  background:linear-gradient(to right,#158f5a,#1fd18a);
+  color:white;
+}
+
+.hero h1{
+  font-size:38px;
+  margin-bottom:15px;
+}
+
+.hero p{
+  font-size:18px;
+  margin-bottom:25px;
+}
+
+.hero button{
+  padding:14px 22px;
+  border:none;
+  border-radius:10px;
+  background:white;
+  color:#158f5a;
+  font-weight:bold;
+  font-size:16px;
+  cursor:pointer;
+}
+
+
+.features{
+  padding:60px 30px;
+  text-align:center;
+}
+
+.features h2{
+  color:#0f6d46;
+  margin-bottom:30px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:22px;
+}
+
+.card{
+  background:white;
+  padding:26px;
+  border-radius:14px;
+  box-shadow:0 6px 16px rgba(0,0,0,.1);
+  transition:.3s;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+}
+
+.card h3{
+  margin-bottom:10px;
+  color:#158f5a;
+}
+
+
+.areas{
+  padding:60px 30px;
+  background:#e7f6ef;
+  text-align:center;
+}
+
+.areaGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+  margin-top:25px;
+}
+
+.areaCard{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  font-weight:bold;
+  box-shadow:0 6px 14px rgba(0,0,0,.1);
+  cursor:pointer;
+  transition:.3s;
+}
+
+.areaCard:hover{
+  background:#1fd18a;
+  transform:scale(1.05);
+}
+
+
+.cta{
+  text-align:center;
+  padding:50px;
+}
+
+.cta button{
+  padding:16px 26px;
+  font-size:18px;
+  border:none;
+  border-radius:12px;
+  background:#158f5a;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+footer{
+  background:#0f6d46;
+  color:white;
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <div class="logo">♻ Smart Waste City</div>
+
+  <div class="menu">
+    <a href="home.html">Home</a>
+    <a href="report.html">Report Waste</a>
+    <a href="binstatus.html">Bin Status</a>
+    <a href="recycle.html">Recycle Bin</a>
+    <a href="admin.html">Admin</a>
+  </div>
+</nav>
+
+
+<section class="hero">
+  <h1>Smart City Waste Management System</h1>
+  <p>Clean City • Smart Reporting • Faster Action</p>
+  <button onclick="goReport()">Report Waste Now</button>
+</section>
+
+<section class="features">
+  <h2>System Features</h2>
+
+  <div class="grid">
+    <div class="card">
+      <h3>📍 Smart Area Tracking</h3>
+      <p>Zone-wise waste reporting and monitoring</p>
+    </div>
+
+    <div class="card">
+      <h3>📊 Live Dashboard</h3>
+      <p>Real-time complaint and bin analytics</p>
+    </div>
+
+    <div class="card">
+      <h3>🚛 Fast Collection</h3>
+      <p>Priority based pickup system</p>
+    </div>
+
+    <div class="card">
+      <h3>♻ Recycling Support</h3>
+      <p>Waste segregation awareness</p>
+    </div>
+  </div>
+</section>
+
+
+<section class="areas">
+  <h2>📍 Monitored City Areas</h2>
+
+  <div class="areaGrid">
+    <div class="areaCard">MIDC Area</div>
+    <div class="areaCard">TC College Area</div>
+    <div class="areaCard">VP College Area</div>
+    <div class="areaCard">Railway Station</div>
+    <div class="areaCard">Bus Station</div>
+    <div class="areaCard">Kasba Area</div>
+    <div class="areaCard">Silver Jubilee Hospital</div>
+  </div>
+</section>
+
+
+<section class="cta">
+  <h2>Help Keep the City Clean</h2>
+  <br>
+  <button onclick="goReport()">Submit a Waste Report</button>
+</section>
+
+<footer>
+Smart City Hackathon Project — Waste Management Portal
+</footer>
+
+<script>
+function goReport(){
+  window.location.href = "report.html";
+}
+
+document.querySelectorAll(".areaCard").forEach(card=>{
+  card.onclick = () => {
+    alert("Monitoring Enabled for: " + card.innerText);
+  };
+});
+</script>
+
+</body>
+</html>
